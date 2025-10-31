@@ -5,10 +5,73 @@
   padding: 0;
 }
 
+/* L'Oréal branded palette (assumption: classic black + gold accent + neutral grays)
+   Notes: I chose a conservative brand palette to align visually with L'Oréal's
+   identity: deep black for typography, warm gold for accents, and light neutrals
+   for backgrounds. If you have exact hex values from a brand guide, I can update
+   these variables to match exactly. */
+:root {
+  --brand-black: #0a0a0a;
+  --brand-gray: #4d4d4d;
+  --brand-muted: #f6f6f6;
+  --brand-border: rgba(10, 10, 10, 0.08);
+  --brand-gold: #c79b3b;
+  --brand-gold-dark: #a37324;
+  --brand-white: #ffffff;
+}
+
+/* Font stacks & licensing notes
+   Body / Search bars: Helvetica Now Display (W05 Reg / Lt / Bd variants)
+   Headers / Menus: Halesworth eText (Medium, Bold)
+
+   IMPORTANT: Both Helvetica Now Display and Halesworth eText are commercial fonts.
+   To use them on the web you must host a licensed webfont kit (Fonts.com/Monotype,
+   Adobe Fonts, or self-host the files you have a license to serve). Below is a
+   commented example showing how to self-host licensed fonts using @font-face.
+
+   If you don't have a license, keep these font-family names in the stack so that
+   locally-installed fonts will be used when available, and fallback fonts will
+   render otherwise.
+*/
+
+/* Example (commented) - replace the src urls with your licensed font file locations
+@font-face {
+  font-family: 'Helvetica Now Display W05';
+  src: url('/fonts/HelveticaNowDisplayW05-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Halesworth eText';
+  src: url('/fonts/Halesworth-eText-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* Font name variables (used below). These are the preferred names; if you host
+   font files under different family names, update the @font-face and these names. */
+:root {
+  --font-body: "Helvetica Now Display W05", "Helvetica Now Display", Helvetica,
+    Arial, sans-serif;
+  --font-header: "Halesworth eText", "Halesworth", Georgia, "Times New Roman",
+    serif;
+}
+
 /* —— body + fonts —— */
 body {
-  font-family: "Montserrat", Arial, Helvetica, sans-serif;
-  color: #333;
+  font-family: var(
+    --font-body,
+    "Helvetica Now Display W05",
+    "Helvetica Now Display",
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  color: var(--brand-gray);
   display: flex;
   justify-content: center;
 }
@@ -28,6 +91,25 @@ body {
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 10px;
+  color: var(--brand-black);
+  font-family: var(--font-header, "Halesworth eText", Georgia, serif);
+}
+
+.brand-logo {
+  height: 56px; /* visually balanced with the header */
+  width: auto;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.latest-question {
+  font-weight: 600;
+  margin: 12px 0 6px;
+  padding: 8px 12px;
+  background: #fff;
+  color: var(--brand-black);
+  border-left: 4px solid var(--brand-gold);
+  border-radius: 4px;
 }
 
 /* chat window */
@@ -37,27 +119,51 @@ body {
 
 .chat-window {
   height: 360px;
-  border: 1px solid #000;
+  border: 1px solid var(--brand-border);
   padding: 20px;
   font-size: 18px;
   line-height: 1.5;
   overflow-y: auto;
-  background: #fafafa;
+  background: var(--brand-muted);
   white-space: pre-line;
 }
 
 /* messages */
 .msg {
-  margin-bottom: 14px;
-  line-height: 1.5;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  display: inline-block;
+  padding: 12px 14px;
+  border-radius: 16px;
+  max-width: 78%;
+  word-break: break-word;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.04);
+  transition: background 0.18s, transform 0.12s;
 }
 
-.msg.user {
-  color: #000;
-}
-
+/* Assistant / bot messages (left) */
 .msg.ai {
-  color: #666666;
+  align-self: flex-start;
+  background: var(--brand-white);
+  border: 1px solid var(--brand-border);
+  color: var(--brand-gray);
+  border-top-left-radius: 6px;
+}
+
+/* User messages (right) */
+.msg.user {
+  align-self: flex-end;
+  background: var(--brand-gold);
+  color: var(--brand-white);
+  border: none;
+  border-top-right-radius: 6px;
+}
+
+/* Make the chat window a column flex container so messages can align */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* input row */
@@ -70,19 +176,27 @@ body {
 .chat-form input {
   flex: 1;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--brand-border);
   font-size: 18px;
+  font-family: var(
+    --font-body,
+    "Helvetica Now Display W05",
+    "Helvetica Now Display",
+    Helvetica,
+    Arial,
+    sans-serif
+  );
 }
 
 .chat-form input:focus {
-  outline: 2px solid #000;
+  outline: 2px solid var(--brand-gold);
   outline-offset: 2px;
 }
 
 .chat-form button {
   font-size: 18px;
-  background: #000;
-  color: #fff;
+  background: var(--brand-gold);
+  color: var(--brand-white);
   border: none;
   padding: 12px;
   width: 48px;
@@ -99,11 +213,11 @@ body {
 }
 
 .chat-form button:hover {
-  background: #666666;
+  background: var(--brand-gold-dark);
 }
 
 .chat-form button:focus {
-  outline: 2px solid #000;
+  outline: 2px solid var(--brand-gold-dark);
   outline-offset: 2px;
 }
 
@@ -125,7 +239,7 @@ body {
   margin: 60px 0 40px;
   text-align: center;
   font-size: 14px;
-  color: #666;
+  color: var(--brand-gray);
 }
 
 .site-footer nav {
@@ -134,10 +248,10 @@ body {
 
 .site-footer a {
   margin: 0 8px;
-  color: #000;
+  color: var(--brand-black);
   text-decoration: none;
 }
 
 .site-footer a:hover {
-  color: #666666;
+  color: var(--brand-gold);
 }
